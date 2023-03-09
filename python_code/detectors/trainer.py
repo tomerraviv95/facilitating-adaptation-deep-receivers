@@ -154,6 +154,7 @@ class Trainer(object):
             if self.online_meta and conf.fading_in_channel and block_ind > 0 and block_ind % META_BLOCKS_NUM == 0:
                 print('Meta')
                 self._meta_training(saved_detector, buffer_tx, buffer_rx)
+
             # online training main function
             if conf.is_online_training:
                 if self.online_meta:

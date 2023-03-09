@@ -4,7 +4,7 @@ seed: 0 # run seed
 # channel
 channel_type: 'MIMO' # Channel type values: ['MIMO'].
 channel_model: 'Synthetic' # Physical channel models: ['Cost2100','Synthetic']
-detector_type: 'meta_deepsic'# 'deepsic' or 'black_box' or 'meta_deepsic
+detector_type: 'meta_deepsic'# 'deepsic' or 'black_box' or 'meta_deepsic'
 linear: True # channel linearity. Boolean value.
 fading_in_channel: True # If the channel is fading/non-fading. values: [True, False]
 snr: 10 # validation SNR value. values: float.
@@ -15,7 +15,7 @@ n_ant: 4 # number of received signals
 # protocol
 block_length: 50000 # coherence block time, total size of pilot + data. values: int.
 pilot_size: 200 # pilot bits
-blocks_num: 10 # number of validation frames. values: int.
+blocks_num: 60 # number of validation frames. values: int.
 
 # online training hyperparameters
 is_online_training: True # Whether to run the online training (as in ViterbiNet). values: [True, False].
