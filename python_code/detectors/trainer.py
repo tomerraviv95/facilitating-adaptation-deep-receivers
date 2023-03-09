@@ -14,11 +14,14 @@ from python_code.channel.modulator import MODULATION_NUM_MAPPING
 from python_code.utils.constants import ModulationType
 from python_code.utils.metrics import calculate_ber
 from python_code.utils.probs_utils import get_bits_from_qpsk_symbols
+from python_code.utils.python_utils import copy_model
 
 random.seed(conf.seed)
 torch.manual_seed(conf.seed)
 torch.cuda.manual_seed(conf.seed)
 np.random.seed(conf.seed)
+
+META_BLOCKS_NUM = 5
 
 
 class Trainer(object):
@@ -31,6 +34,7 @@ class Trainer(object):
     def __init__(self):
         self.constellation_bits = int(math.log2(MODULATION_NUM_MAPPING[conf.modulation_type]))
         # initialize matrices, datasets and detector
+        self.online_meta = False
         self._initialize_dataloader()
         self._initialize_detector()
         self.softmax = torch.nn.Softmax(dim=1)  # Single symbol probability inference
@@ -128,6 +132,11 @@ class Trainer(object):
         transmitted_words, received_words, hs = self.channel_dataset.__getitem__(snr_list=[conf.snr])
         # augmentations
         augmenter_wrapper = AugmenterWrapper(conf.aug_type, conf.fading_in_channel)
+        # meta-training's saved detector - saved detector is used to initialize the decoder in meta learning loops
+        saved_detector = copy_model(self.detector)
+        # buffer for words and their target
+        buffer_tx, buffer_rx = torch.empty([0, transmitted_words.shape[2]]).to(DEVICE), torch.empty(
+            [0, received_words.shape[2]]).to(DEVICE)
         # detect sequentially
         for block_ind in range(conf.blocks_num):
             print('*' * 20)
@@ -138,7 +147,17 @@ class Trainer(object):
                                 tx[conf.pilot_size // self.constellation_bits:]
             rx_pilot, rx_data = rx[:conf.pilot_size // self.constellation_bits], \
                                 rx[conf.pilot_size // self.constellation_bits:]
+            # add to buffer
+            buffer_tx = torch.cat([buffer_tx, tx_pilot], dim=0)
+            buffer_rx = torch.cat([buffer_rx, rx_pilot], dim=0)
+            # meta-learning main function
+            if self.online_meta and conf.fading_in_channel and block_ind > 0 and block_ind % META_BLOCKS_NUM == 0:
+                print('Meta')
+                self._meta_training(saved_detector, buffer_tx, buffer_rx)
+            # online training main function
             if conf.is_online_training:
+                if self.online_meta:
+                    self.detector = copy_model(saved_detector)
                 # augment received words by the number of desired repeats
                 augmenter_wrapper.update_hyperparams(rx_pilot, tx_pilot)
                 y_aug, x_aug = augmenter_wrapper.augment_batch(rx_pilot, tx_pilot)
@@ -165,3 +184,6 @@ class Trainer(object):
         loss.backward()
         self.optimizer.step()
         return current_loss
+
+    def _meta_training(self, saved_detector, tx_pilot: torch.Tensor, rx_pilot: torch.Tensor):
+        pass

@@ -18,6 +18,7 @@ class ChannelModels(Enum):
 
 class DetectorType(Enum):
     deepsic = 'deepsic'
+    meta_deepsic = 'meta_deepsic'
     black_box = 'black_box'
 
 
