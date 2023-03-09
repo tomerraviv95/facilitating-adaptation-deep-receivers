@@ -8,6 +8,7 @@ from torch.nn import CrossEntropyLoss, MSELoss
 from torch.optim import RMSprop, Adam, SGD
 
 from python_code import DEVICE, conf
+from python_code.augmentations.augmenter_wrapper import AugmenterWrapper
 from python_code.channel.channel_dataset import ChannelModelDataset
 from python_code.channel.modulator import MODULATION_NUM_MAPPING
 from python_code.utils.constants import ModulationType
@@ -125,6 +126,8 @@ class Trainer(object):
         total_ber = []
         # draw words for a given snr
         transmitted_words, received_words, hs = self.channel_dataset.__getitem__(snr_list=[conf.snr])
+        # augmentations
+        augmenter_wrapper = AugmenterWrapper(conf.aug_type, conf.fading_in_channel)
         # detect sequentially
         for block_ind in range(conf.blocks_num):
             print('*' * 20)
@@ -136,8 +139,11 @@ class Trainer(object):
             rx_pilot, rx_data = rx[:conf.pilot_size // self.constellation_bits], \
                                 rx[conf.pilot_size // self.constellation_bits:]
             if conf.is_online_training:
+                # augment received words by the number of desired repeats
+                augmenter_wrapper.update_hyperparams(rx_pilot, tx_pilot)
+                y_aug, x_aug = augmenter_wrapper.augment_batch(rx_pilot, tx_pilot)
                 # re-train the detector
-                self._online_training(tx_pilot, rx_pilot)
+                self._online_training(x_aug, y_aug)
             # detect data part after training on the pilot part
             detected_word = self.forward(rx_data)
             # calculate accuracy
