@@ -42,14 +42,13 @@ class RotationAugmenter:
         chosen_transformation = self.degrees[random_ind]
         if conf.modulation_type == ModulationType.BPSK.name:
             rx = torch.cat([rx.unsqueeze(-1), torch.zeros_like(rx.unsqueeze(-1))],
-                           dim=1)
-            rx = rx[:, :, 0]
+                           dim=2)
         # add the random degree to the angle of current word
         new_angle = torch.view_as_complex(rx).angle() + chosen_transformation
         new_complex_rx = torch.view_as_complex(rx).abs() * (torch.cos(new_angle) + 1j * torch.sin(new_angle))
         new_rx = torch.view_as_real(new_complex_rx)
         if conf.modulation_type == ModulationType.BPSK.name:
-            new_rx = new_rx[:, 0].unsqueeze(1)
+            new_rx = new_rx[:, :, 0]
 
         # get the desired new class after transformation
         new_tx = tx
