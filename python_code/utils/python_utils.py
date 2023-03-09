@@ -1,10 +1,8 @@
-import copy
 import math
 import pickle as pkl
-from typing import Dict, Any, List
+from typing import Dict, Any
 
 import numpy as np
-from torch import nn
 
 from python_code import conf
 from python_code.channel.modulator import MODULATION_NUM_MAPPING
@@ -26,7 +24,3 @@ def normalize_for_modulation(size: int) -> int:
     Return the bits/symbols ratio for the given block size
     """
     return int(size // int(math.log2(MODULATION_NUM_MAPPING[conf.modulation_type])))
-
-
-def copy_model(model: List[nn.Module]) -> List[nn.Module]:
-    return [copy.deepcopy(single_model) for single_model in model]
