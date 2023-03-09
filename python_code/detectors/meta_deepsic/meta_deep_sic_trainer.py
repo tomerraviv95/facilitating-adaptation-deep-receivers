@@ -23,9 +23,6 @@ class MetaDeepSICTrainer(DeepSICTrainer):
         super().__init__()
         self.online_meta = True
 
-    def __str__(self):
-        return 'Meta-DeepSIC'
-
     def _meta_train_model(self, single_model: nn.Module, tx: torch.Tensor, rx: torch.Tensor):
         """
         Main meta-training loop. Runs in minibatches, each minibatch is split to pairs of following words.

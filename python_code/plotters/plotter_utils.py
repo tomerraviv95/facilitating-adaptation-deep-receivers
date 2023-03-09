@@ -27,7 +27,11 @@ mpl.rcParams['font.family'] = 'STIXGeneral'
 
 
 def get_linestyle(method_name: str) -> str:
-    if 'DeepSIC' in method_name:
+    if 'Meta-' in method_name:
+        return 'solid'
+    elif 'Augmented' in method_name:
+        return 'dashed'
+    elif 'DeepSIC' in method_name:
         return 'dotted'
     elif 'DNN' in method_name:
         return '-.'
@@ -36,7 +40,11 @@ def get_linestyle(method_name: str) -> str:
 
 
 def get_marker(method_name: str) -> str:
-    if 'DeepSIC' in method_name:
+    if 'Meta-' in method_name:
+        return 'o'
+    elif 'Augmented' in method_name:
+        return 'X'
+    elif 'DeepSIC' in method_name:
         return 's'
     elif 'DNN' in method_name:
         return 'p'
@@ -45,7 +53,11 @@ def get_marker(method_name: str) -> str:
 
 
 def get_color(method_name: str) -> str:
-    if 'DeepSIC' in method_name:
+    if 'Meta-' in method_name:
+        return 'blue'
+    elif 'Augmented' in method_name:
+        return 'black'
+    elif 'DeepSIC' in method_name:
         return 'red'
     elif 'DNN' in method_name:
         return 'green'

@@ -1,4 +1,3 @@
-import copy
 from typing import List
 
 import torch
@@ -25,7 +24,12 @@ class DeepSICTrainer(Trainer):
         super().__init__()
 
     def __str__(self):
-        return 'DeepSIC'
+        name = 'DeepSIC'
+        if self.online_meta:
+            name = 'Meta-' + name
+        if len(conf.aug_type) > 0:
+            name = 'Augmented ' + name
+        return name
 
     def _initialize_detector(self):
         self.detector = [[DeepSICDetector().to(DEVICE) for _ in range(ITERATIONS)] for _ in

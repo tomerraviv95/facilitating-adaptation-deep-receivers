@@ -5,7 +5,7 @@ seed: 0 # run seed
 channel_type: 'MIMO' # Channel type values: ['MIMO'].
 channel_model: 'Synthetic' # Physical channel models: ['Cost2100','Synthetic']
 detector_type: 'deepsic'# 'deepsic' or 'black_box' or 'meta_deepsic'
-linear: True # channel linearity. Boolean value.
+linear: False # channel linearity. Boolean value.
 fading_in_channel: True # If the channel is fading/non-fading. values: [True, False]
 snr: 10 # validation SNR value. values: float.
 modulation_type: 'QPSK' # ['BPSK','QPSK']
