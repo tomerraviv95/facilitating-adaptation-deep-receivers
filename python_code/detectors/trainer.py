@@ -157,7 +157,7 @@ class Trainer(object):
 
             # online training main function
             if conf.is_online_training:
-                if self.online_meta:
+                if self.online_meta and block_ind >= META_BLOCKS_NUM:
                     self.detector = copy_model(saved_detector)
                 # augment received words by the number of desired repeats
                 augmenter_wrapper.update_hyperparams(rx_pilot, tx_pilot)

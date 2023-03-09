@@ -39,13 +39,14 @@ class MetaDeepSICTrainer(DeepSICTrainer):
         meta_model = MetaDeepSICDetector()
         support_idx = torch.arange(tx.shape[0] - conf.pilot_size)
         query_idx = torch.arange(conf.pilot_size, tx.shape[0])
+        y_total = self.preprocess(rx)
 
         for _ in range(EPOCHS):
             opt.zero_grad()
 
             # divide the words to following pairs - (support,query)
-            support_b, support_y = tx[support_idx], rx[support_idx]
-            query_b, query_y = tx[query_idx], rx[query_idx]
+            support_b, support_y = tx[support_idx], y_total[support_idx]
+            query_b, query_y = tx[query_idx], y_total[query_idx]
 
             # local update (with support set)
             para_list_detector = list(map(lambda p: p[0], zip(single_model.parameters())))
