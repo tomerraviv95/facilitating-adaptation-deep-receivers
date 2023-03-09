@@ -6,9 +6,9 @@ channel_type: 'MIMO' # Channel type values: ['MIMO'].
 channel_model: 'Synthetic' # Physical channel models: ['Cost2100','Synthetic']
 detector_type: 'deepsic'# 'deepsic' or 'black_box'
 linear: True # channel linearity. Boolean value.
-fading_in_channel: False # If the channel is fading/non-fading. values: [True, False]
+fading_in_channel: True # If the channel is fading/non-fading. values: [True, False]
 snr: 12 # validation SNR value. values: float.
-modulation_type: 'QPSK' # ['BPSK','QPSK']
+modulation_type: 'BPSK' # ['BPSK','QPSK','EightPSK']
 n_user: 4 # number of transmitting devices
 n_ant: 4 # number of received signals
 

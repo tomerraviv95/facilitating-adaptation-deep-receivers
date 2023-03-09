@@ -34,7 +34,7 @@ def calculate_symbols_from_states(state_size: int, gt_states: torch.Tensor) -> t
     mask = MODULATION_NUM_MAPPING[conf.modulation_type] ** torch.arange(state_size).to(DEVICE, gt_states.dtype)
     if conf.modulation_type == ModulationType.BPSK.name:
         return gt_states.unsqueeze(-1).bitwise_and(mask).ne(0).long()
-    elif conf.modulation_type in [ModulationType.QPSK.name, ModulationType.EightPSK.name]:
+    elif conf.modulation_type in [ModulationType.QPSK.name]:
         result = torch.div(gt_states.unsqueeze(-1), mask, rounding_mode='floor')
         result = result % MODULATION_NUM_MAPPING[conf.modulation_type]
         return result
