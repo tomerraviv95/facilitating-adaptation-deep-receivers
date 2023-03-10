@@ -27,9 +27,9 @@ mpl.rcParams['font.family'] = 'STIXGeneral'
 
 
 def get_linestyle(method_name: str) -> str:
-    if 'Meta-' in method_name:
+    if 'Augmented' in method_name:
         return 'solid'
-    elif 'Augmented' in method_name:
+    elif 'Meta-' in method_name:
         return 'dashed'
     elif 'DeepSIC' in method_name:
         return 'dotted'
@@ -40,9 +40,9 @@ def get_linestyle(method_name: str) -> str:
 
 
 def get_marker(method_name: str) -> str:
-    if 'Meta-' in method_name:
+    if 'Augmented' in method_name:
         return 'o'
-    elif 'Augmented' in method_name:
+    elif 'Meta-' in method_name:
         return 'X'
     elif 'DeepSIC' in method_name:
         return 's'
@@ -53,9 +53,9 @@ def get_marker(method_name: str) -> str:
 
 
 def get_color(method_name: str) -> str:
-    if 'Meta-' in method_name:
+    if 'Augmented' in method_name:
         return 'blue'
-    elif 'Augmented' in method_name:
+    elif 'Meta-' in method_name:
         return 'black'
     elif 'DeepSIC' in method_name:
         return 'red'
@@ -120,7 +120,7 @@ def plot_by_values(all_curves: List[Tuple[np.ndarray, np.ndarray, str]], values:
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
     plt.grid(which='both', ls='--')
-    plt.legend(loc='upper right', prop={'size': 15})
+    plt.legend(loc='lower left', prop={'size': 15})
     plt.yscale('log')
     trainer_name = cur_name.split(' ')[0]
     plt.savefig(os.path.join(FIGURES_DIR, folder_name, f'ser_versus_snrs_{trainer_name}.png'),

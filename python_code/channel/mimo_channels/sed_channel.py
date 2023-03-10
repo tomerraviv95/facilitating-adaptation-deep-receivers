@@ -44,7 +44,7 @@ class SEDChannel:
             w = w_real + w_imag
         y = conv + w
         if not conf.linear:
-            y = np.tanh(y)
+            y = np.tanh(0.5 * y)
         return y
 
     @staticmethod
