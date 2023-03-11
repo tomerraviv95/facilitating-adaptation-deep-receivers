@@ -14,6 +14,7 @@ class ChannelModes(Enum):
 
 class ChannelModels(Enum):
     Synthetic = 'Synthetic'
+    Cost2100 = 'Cost2100'
 
 
 class DetectorType(Enum):
