@@ -3,11 +3,11 @@ seed: 0 # run seed
 
 # channel
 channel_type: 'MIMO' # Channel type values: ['MIMO'].
-channel_model: 'Cost2100' # Physical channel models: ['Cost2100','Synthetic']
-detector_type: 'meta_deepsic'# 'deepsic' or 'black_box' or 'meta_deepsic'
+channel_model: 'Synthetic' # Physical channel models: ['Cost2100','Synthetic']
+detector_type: 'black_box'# 'deepsic' or 'black_box' or 'meta_deepsic'
 linear: True # channel linearity. Boolean value.
 fading_in_channel: True # If the channel is fading/non-fading. values: [True, False]
-snr: 10 # validation SNR value. values: float.
+snr: 12 # validation SNR value. values: float.
 modulation_type: 'QPSK' # ['BPSK','QPSK']
 n_user: 4 # number of transmitting devices
 n_ant: 4 # number of received signals

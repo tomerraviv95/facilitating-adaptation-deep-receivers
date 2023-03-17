@@ -3,7 +3,7 @@ from torch import nn
 
 from python_code import DEVICE, conf
 from python_code.channel.modulator import MODULATION_NUM_MAPPING
-from python_code.utils.constants import Phase, ModulationType
+from python_code.utils.constants import ModulationType
 
 HIDDEN_SIZE = 60
 

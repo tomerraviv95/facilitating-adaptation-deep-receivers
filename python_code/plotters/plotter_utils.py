@@ -125,7 +125,6 @@ def plot_by_values(all_curves: List[Tuple[np.ndarray, np.ndarray, str]], values:
     trainer_name = cur_name.split(' ')[0]
     plt.savefig(os.path.join(FIGURES_DIR, folder_name, f'ser_versus_snrs_{trainer_name}.png'),
                 bbox_inches='tight')
-    plt.show()
 
 
 def get_to_plot_values_dict(all_curves: List[Tuple[float, str]], names: List[str]) -> Tuple[
