@@ -15,13 +15,14 @@ MIMO_CHANNELS_DICT = {ChannelModels.Synthetic.name: SEDChannel,
 
 
 class MIMOChannel:
-    def __init__(self, block_length: int, pilots_length: int):
+    def __init__(self, block_length: int, pilots_length: int, fading_in_channel: bool):
         self._block_length = block_length
         self._pilots_length = pilots_length
         self._bits_generator = default_rng(seed=conf.seed)
         self.tx_length = conf.n_user
         self.h_shape = [conf.n_ant, conf.n_user]
         self.rx_length = conf.n_ant
+        self.fading_in_channel = fading_in_channel
 
     def _transmit(self, h: np.ndarray, snr: float) -> Tuple[np.ndarray, np.ndarray]:
         tx_pilots = self._bits_generator.integers(0, 2, size=(self._pilots_length, conf.n_user))
@@ -38,9 +39,9 @@ class MIMOChannel:
     def get_vectors(self, snr: float, index: int) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
         # get channel values
         if conf.channel_model == ChannelModels.Synthetic.name:
-            h = SEDChannel.calculate_channel(conf.n_ant, conf.n_user, index, conf.fading_in_channel)
+            h = SEDChannel.calculate_channel(conf.n_ant, conf.n_user, index, self.fading_in_channel)
         elif conf.channel_model == ChannelModels.Cost2100.name:
-            h = Cost2100MIMOChannel.calculate_channel(conf.n_ant, conf.n_user, index, conf.fading_in_channel)
+            h = Cost2100MIMOChannel.calculate_channel(conf.n_ant, conf.n_user, index, self.fading_in_channel)
         else:
             raise ValueError("No such channel model!!!")
         tx, rx = self._transmit(h, snr)

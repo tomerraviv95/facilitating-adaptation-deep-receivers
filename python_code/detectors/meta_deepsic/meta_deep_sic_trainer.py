@@ -22,7 +22,7 @@ class MetaDeepSICTrainer(DeepSICTrainer):
 
     def __init__(self):
         super().__init__()
-        self.online_meta = True
+        self.is_online_meta = True
 
     def copy_model(self, model: List[nn.Module]) -> List[nn.Module]:
         return [copy.deepcopy(single_model) for single_model in model]

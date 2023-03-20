@@ -26,6 +26,8 @@ class DNNDetector(nn.Module):
                   nn.ReLU(),
                   nn.Linear(HIDDEN_SIZE, HIDDEN_SIZE),
                   nn.ReLU(),
+                  nn.Linear(HIDDEN_SIZE, HIDDEN_SIZE),
+                  nn.ReLU(),
                   nn.Linear(HIDDEN_SIZE, self.n_states)]
         self.net = nn.Sequential(*layers).to(DEVICE)
 

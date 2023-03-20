@@ -25,8 +25,12 @@ class DeepSICTrainer(Trainer):
 
     def __str__(self):
         name = 'DeepSIC'
-        if self.online_meta:
+        if self.is_joint_training:
+            name = 'Joint ' + name
+        if self.is_online_meta:
             name = 'Meta-' + name
+        if self.is_online_training:
+            name = 'Online ' + name
         if len(conf.aug_type) > 0:
             name = 'Augmented ' + name
         return name

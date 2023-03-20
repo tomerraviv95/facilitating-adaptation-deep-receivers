@@ -26,7 +26,7 @@ def get_config(plot_type: PlotType) -> Tuple[List[Dict], list, str, str]:
             {'snr': 12, 'detector_type': DetectorType.deepsic.name},
         ]
         values = list(range(4, 13, 2))
-        xlabel, ylabel = 'SNR [dB]', 'SER'
+        xlabel, ylabel = 'SNR [dB]', 'BER'
     elif plot_type == PlotType.LINEAR_SYNTH_QPSK:
         params_dicts = [
             {'snr': 10, 'detector_type': DetectorType.black_box.name},
@@ -66,7 +66,7 @@ def get_config(plot_type: PlotType) -> Tuple[List[Dict], list, str, str]:
              'aug_type': ['geometric_augmenter', 'translation_augmenter', 'rotation_augmenter'], 'online_repeats_n': 3},
         ]
         values = list(range(10, 17, 1))
-        xlabel, ylabel = 'SNR [dB]', 'SER'
+        xlabel, ylabel = 'SNR [dB]', 'BER'
     elif plot_type == PlotType.NON_LINEAR_SYNTH_QPSK:
         params_dicts = [
             {'snr': 10, 'detector_type': DetectorType.black_box.name},
@@ -106,7 +106,7 @@ def get_config(plot_type: PlotType) -> Tuple[List[Dict], list, str, str]:
              'aug_type': ['geometric_augmenter', 'translation_augmenter', 'rotation_augmenter'], 'online_repeats_n': 3},
         ]
         values = list(range(10, 17, 1))
-        xlabel, ylabel = 'SNR [dB]', 'SER'
+        xlabel, ylabel = 'SNR [dB]', 'BER'
     elif plot_type == PlotType.LINEAR_COST_QPSK:
         params_dicts = [
             {'snr': 7, 'detector_type': DetectorType.black_box.name},
@@ -146,7 +146,7 @@ def get_config(plot_type: PlotType) -> Tuple[List[Dict], list, str, str]:
              'aug_type': ['geometric_augmenter', 'translation_augmenter', 'rotation_augmenter'], 'online_repeats_n': 3},
         ]
         values = list(range(7, 14, 1))
-        xlabel, ylabel = 'SNR [dB]', 'SER'
+        xlabel, ylabel = 'SNR [dB]', 'BER'
     else:
         raise ValueError('No such plot type!!!')
 

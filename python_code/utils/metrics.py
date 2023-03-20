@@ -1,7 +1,5 @@
 import torch
 
-SENSITIVITY = 1e-3
-
 
 def calculate_ber(prediction: torch.Tensor, target: torch.Tensor) -> float:
     """

@@ -17,10 +17,10 @@ class ChannelModelDataset(Dataset):
     Returns (transmitted, received, channel_coefficients) batch.
     """
 
-    def __init__(self, block_length: int, pilots_length: int, blocks_num: int):
+    def __init__(self, block_length: int, pilots_length: int, blocks_num: int, fading_in_channel: bool):
         self.blocks_num = blocks_num
         self.block_length = block_length
-        self.channel_type = MIMOChannel(block_length, pilots_length)
+        self.channel_type = MIMOChannel(block_length, pilots_length,fading_in_channel)
 
     def get_snr_data(self, snr: float, database: list):
         if database is None:

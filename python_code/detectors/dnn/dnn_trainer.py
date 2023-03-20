@@ -3,7 +3,7 @@ import torch
 from python_code import conf
 from python_code.detectors.dnn.dnn_detector import DNNDetector
 from python_code.detectors.trainer import Trainer
-from python_code.utils.constants import Phase, ModulationType
+from python_code.utils.constants import ModulationType
 from python_code.utils.probs_utils import calculate_mimo_states, get_bits_from_qpsk_symbols, \
     calculate_symbols_from_states
 
@@ -25,7 +25,12 @@ class DNNTrainer(Trainer):
         super().__init__()
 
     def __str__(self):
-        return 'DNN Detector'
+        name = 'DNN Detector'
+        if self.is_joint_training:
+            name = 'Joint ' + name
+        if self.is_online_training:
+            name = 'Online ' + name
+        return name
 
     def _initialize_detector(self):
         """

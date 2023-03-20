@@ -18,9 +18,11 @@ class ChannelModels(Enum):
 
 
 class DetectorType(Enum):
-    deepsic = 'deepsic'
+    joint_black_box = 'joint_black_box'
+    online_black_box = 'online_black_box'
+    joint_deepsic = 'joint_deepsic'
+    online_deepsic = 'online_deepsic'
     meta_deepsic = 'meta_deepsic'
-    black_box = 'black_box'
 
 
 class ModulationType(Enum):

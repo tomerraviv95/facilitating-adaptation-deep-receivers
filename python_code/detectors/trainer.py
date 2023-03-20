@@ -33,7 +33,9 @@ class Trainer(object):
     def __init__(self):
         self.constellation_bits = int(math.log2(MODULATION_NUM_MAPPING[conf.modulation_type]))
         # initialize matrices, datasets and detector
-        self.online_meta = False
+        self.is_online_meta = False
+        self.is_online_training = False
+        self.is_joint_training = False
         self._initialize_dataloader()
         self._initialize_detector()
         self.softmax = torch.nn.Softmax(dim=1)  # Single symbol probability inference
@@ -104,9 +106,14 @@ class Trainer(object):
         """
         Sets up the data loader - a generator from which we draw batches, in iterations
         """
-        self.channel_dataset = ChannelModelDataset(block_length=conf.block_length,
-                                                   pilots_length=conf.pilot_size,
-                                                   blocks_num=conf.blocks_num)
+        self.test_channel_dataset = ChannelModelDataset(block_length=conf.block_length,
+                                                        pilots_length=conf.pilot_size,
+                                                        blocks_num=conf.blocks_num,
+                                                        fading_in_channel=conf.fading_in_channel)
+        self.train_channel_dataset = ChannelModelDataset(block_length=conf.joint_block_length,
+                                                         pilots_length=conf.joint_pilot_size,
+                                                         blocks_num=conf.joint_blocks_num,
+                                                         fading_in_channel=False)
 
     def _online_training(self, tx: torch.Tensor, rx: torch.Tensor):
         """
@@ -127,12 +134,20 @@ class Trainer(object):
         :return: list of ber per timestep
         """
         total_ber = []
-        # draw words for a given snr
-        transmitted_words, received_words, hs = self.channel_dataset.__getitem__(snr_list=[conf.snr])
         # augmentations
         augmenter_wrapper = AugmenterWrapper(conf.aug_type, conf.fading_in_channel)
         # meta-training's saved detector - saved detector is used to initialize the decoder in meta learning loops
         saved_detector = self.copy_model(self.detector)
+        # if in joint training mode, train on the train dataset
+        if self.is_joint_training:
+            # draw words for a given snr
+            joint_transmitted_words, joint_received_words, joint_hs = self.train_channel_dataset.__getitem__(
+                snr_list=[conf.joint_snr])
+            # get current word and channel
+            joint_tx, joint_h, joint_rx = joint_transmitted_words[0], joint_hs[0], joint_received_words[0]
+            self._online_training(joint_tx, joint_rx)
+        # draw words for a given snr
+        transmitted_words, received_words, hs = self.test_channel_dataset.__getitem__(snr_list=[conf.snr])
         # buffer for words and their target
         buffer_tx, buffer_rx = torch.empty([0, transmitted_words.shape[2]]).to(DEVICE), torch.empty(
             [0, received_words.shape[2]]).to(DEVICE)
@@ -150,13 +165,13 @@ class Trainer(object):
             buffer_tx = torch.cat([buffer_tx, tx_pilot], dim=0)
             buffer_rx = torch.cat([buffer_rx, rx_pilot], dim=0)
             # meta-learning main function
-            if self.online_meta and conf.fading_in_channel and block_ind > 0 and block_ind % META_BLOCKS_NUM == 0:
+            if self.is_online_meta and conf.fading_in_channel and block_ind > 0 and block_ind % META_BLOCKS_NUM == 0:
                 print('Meta')
                 self._meta_training(saved_detector, buffer_tx, buffer_rx)
 
             # online training main function
-            if conf.is_online_training:
-                if self.online_meta and block_ind >= META_BLOCKS_NUM:
+            if self.is_online_training:
+                if self.is_online_meta and block_ind >= META_BLOCKS_NUM:
                     self.detector = self.copy_model(saved_detector)
                 # augment received words by the number of desired repeats
                 augmenter_wrapper.update_hyperparams(rx_pilot, tx_pilot)
