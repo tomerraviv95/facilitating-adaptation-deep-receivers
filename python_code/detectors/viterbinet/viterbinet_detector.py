@@ -34,14 +34,14 @@ def acs_block(in_prob: torch.Tensor, llrs: torch.Tensor, transition_table: torch
     return torch.min(reshaped_trellis, dim=2)[0]
 
 
-class VNETDetector(nn.Module):
+class ViterbiNetDetector(nn.Module):
     """
     This implements the VA decoder by a parameterization of the cost calculation by an NN for each stage
     """
 
     def __init__(self, n_states: int):
 
-        super(VNETDetector, self).__init__()
+        super(ViterbiNetDetector, self).__init__()
         self.n_states = n_states
         self.transition_table_array = create_transition_table(n_states)
         self.transition_table = torch.Tensor(self.transition_table_array).to(DEVICE)

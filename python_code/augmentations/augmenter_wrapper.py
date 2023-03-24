@@ -14,7 +14,7 @@ from python_code.utils.probs_utils import calculate_mimo_states, calculate_siso_
 
 conf = Config()
 
-MIN_CLUSTER_POINTS_DICT = {ChannelModes.SISO.name: 100, ChannelModes.MIMO.name: 50}
+MIN_CLUSTER_POINTS = 80
 
 
 def estimate_params(rx: torch.Tensor, tx: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor, int, int]:
@@ -40,7 +40,7 @@ def estimate_params(rx: torch.Tensor, tx: torch.Tensor) -> Tuple[torch.Tensor, t
 
     for state in range(n_states):
         state_ind = (gt_states == state)
-        if torch.count_nonzero(state_ind) > MIN_CLUSTER_POINTS_DICT[conf.channel_type]:
+        if torch.count_nonzero(state_ind) > MIN_CLUSTER_POINTS:
             state_received = rx[state_ind]
             stds[state] = torch.std(state_received, dim=0)
             centers[state] = torch.mean(state_received.real, dim=0)

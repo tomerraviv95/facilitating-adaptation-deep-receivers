@@ -1,4 +1,4 @@
-from python_code.detectors.vnet.vnet_trainer import ViterbiNetTrainer
+from python_code.detectors.viterbinet.viterbinet_trainer import ViterbiNetTrainer
 
 
 class OnlineViterbiNetTrainer(ViterbiNetTrainer):

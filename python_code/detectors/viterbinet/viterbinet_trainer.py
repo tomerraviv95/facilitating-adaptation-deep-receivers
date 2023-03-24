@@ -2,7 +2,7 @@ import torch
 
 from python_code import conf
 from python_code.detectors.trainer import Trainer
-from python_code.detectors.vnet.vnet_detector import VNETDetector
+from python_code.detectors.viterbinet.viterbinet_detector import ViterbiNetDetector
 from python_code.utils.probs_utils import calculate_siso_states
 
 EPOCHS = 500
@@ -37,7 +37,7 @@ class ViterbiNetTrainer(Trainer):
         """
         Loads the ViterbiNet detector
         """
-        self.detector = VNETDetector(n_states=self.n_states)
+        self.detector = ViterbiNetDetector(n_states=self.n_states)
 
     def calc_loss(self, est: torch.Tensor, tx: torch.IntTensor) -> torch.Tensor:
         """
