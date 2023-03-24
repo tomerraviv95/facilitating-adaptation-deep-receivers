@@ -7,7 +7,8 @@ from torch.utils.data import Dataset
 
 from python_code import DEVICE, conf
 from python_code.channel.mimo_channels.mimo_channel_dataset import MIMOChannel
-from python_code.utils.constants import ModulationType
+from python_code.channel.siso_channels.siso_channel_dataset import SISOChannel
+from python_code.utils.constants import ModulationType, ChannelModes
 from python_code.utils.python_utils import normalize_for_modulation
 
 
@@ -20,7 +21,12 @@ class ChannelModelDataset(Dataset):
     def __init__(self, block_length: int, pilots_length: int, blocks_num: int, fading_in_channel: bool):
         self.blocks_num = blocks_num
         self.block_length = block_length
-        self.channel_type = MIMOChannel(block_length, pilots_length,fading_in_channel)
+        if conf.channel_type == ChannelModes.SISO.name:
+            self.channel_type = SISOChannel(block_length, pilots_length,fading_in_channel)
+        elif conf.channel_type == ChannelModes.MIMO.name:
+            self.channel_type = MIMOChannel(block_length, pilots_length,fading_in_channel)
+        else:
+            raise ValueError("No such channel value!")
 
     def get_snr_data(self, snr: float, database: list):
         if database is None:

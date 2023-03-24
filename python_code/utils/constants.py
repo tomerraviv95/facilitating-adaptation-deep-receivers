@@ -9,6 +9,7 @@ class Phase(Enum):
 
 
 class ChannelModes(Enum):
+    SISO = 'SISO'
     MIMO = 'MIMO'
 
 
@@ -23,6 +24,11 @@ class DetectorType(Enum):
     joint_deepsic = 'joint_deepsic'
     online_deepsic = 'online_deepsic'
     meta_deepsic = 'meta_deepsic'
+    joint_rnn = 'joint_rnn'
+    online_rnn = 'online_rnn'
+    joint_viterbinet = 'joint_viterbinet'
+    online_viterbinet = 'online_viterbinet'
+    meta_viterbinet = 'meta_viterbinet'
 
 
 class ModulationType(Enum):

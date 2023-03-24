@@ -174,11 +174,14 @@ class Trainer(object):
             if self.is_online_training:
                 if self.is_online_meta and block_ind >= META_BLOCKS_NUM:
                     self.detector = self.copy_model(saved_detector)
-                # augment received words by the number of desired repeats
-                augmenter_wrapper.update_hyperparams(rx_pilot, tx_pilot)
-                y_aug, x_aug = augmenter_wrapper.augment_batch(rx_pilot, tx_pilot)
-                # re-train the detector
-                self._online_training(x_aug, y_aug)
+                if len(conf.aug_type) > 0:
+                    # augment received words by the number of desired repeats
+                    augmenter_wrapper.update_hyperparams(rx_pilot, tx_pilot)
+                    y_aug, x_aug = augmenter_wrapper.augment_batch(rx_pilot, tx_pilot)
+                    # re-train the detector
+                    self._online_training(x_aug, y_aug)
+                else:
+                    self._online_training(tx_pilot, rx_pilot)
             # detect data part after training on the pilot part
             detected_word = self.forward(rx_data)
             # calculate accuracy

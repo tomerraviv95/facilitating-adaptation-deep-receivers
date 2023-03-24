@@ -2,13 +2,20 @@
 seed: 0 # run seed
 
 # channel
-channel_type: 'MIMO' # Channel type values: ['MIMO'].
+channel_type: 'SISO' # Channel type values: ['SISO','MIMO'].
 channel_model: 'Synthetic' # Physical channel models: ['Cost2100','Synthetic']
-detector_type: 'joint_deepsic'# 'joint_black_box' or 'online_black_box' or 'joint_deepsic' or 'online_deepsic' or 'meta_deepsic'
+detector_type: 'online_rnn'
+# 'joint_black_box' or 'online_black_box' or 'joint_deepsic' or 'online_deepsic' or 'meta_deepsic'
+# 'joint_rnn' or 'online_rnn' or 'joint_deepsic' or 'online_deepsic' or 'meta_deepsic'
 linear: True # channel linearity. Boolean value.
 fading_in_channel: True # If the channel is fading/non-fading. values: [True, False]
 snr: 10 # validation SNR value. values: float.
-modulation_type: 'QPSK' # ['BPSK','QPSK']
+modulation_type: 'BPSK' # ['BPSK','QPSK']
+
+# SISO hyperparams
+memory_length: 4
+
+# MIMO hyperparams
 n_user: 4 # number of transmitting devices
 n_ant: 4 # number of received signals
 
