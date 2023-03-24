@@ -14,7 +14,7 @@ class RNNDetector(nn.Module):
     This class implements an RNN detector
     """
 
-    def __init__(self, memory_length:int):
+    def __init__(self, memory_length: int):
         super(RNNDetector, self).__init__()
         self.output_size = 2 ** memory_length
         self.base_rx_size = INPUT_SIZE if conf.modulation_type == ModulationType.BPSK.name else 2 * INPUT_SIZE

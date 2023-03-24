@@ -8,6 +8,8 @@ from python_code.detectors.dnn.online_dnn_trainer import OnlineDNNTrainer
 from python_code.detectors.meta_deepsic.meta_deep_sic_trainer import MetaDeepSICTrainer
 from python_code.detectors.rnn.joint_rnn_trainer import JointRNNTrainer
 from python_code.detectors.rnn.online_rnn_trainer import OnlineRNNTrainer
+from python_code.detectors.vnet.joint_viterbinet_trainer import JointViterbiNetTrainer
+from python_code.detectors.vnet.online_viterbinet_trainer import OnlineViterbiNetTrainer
 from python_code.utils.constants import DetectorType
 
 os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
@@ -19,6 +21,8 @@ CHANNEL_TYPE_TO_TRAINER_DICT = {
     DetectorType.meta_deepsic.name: MetaDeepSICTrainer,
     DetectorType.joint_rnn.name: JointRNNTrainer,
     DetectorType.online_rnn.name: OnlineRNNTrainer,
+    DetectorType.joint_viterbinet.name: JointViterbiNetTrainer,
+    DetectorType.online_viterbinet.name: OnlineViterbiNetTrainer,
 }
 
 if __name__ == '__main__':

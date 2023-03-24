@@ -19,8 +19,13 @@ class NoSampler:
         self._received_words = received_words
         self._transmitted_words = transmitted_words
 
-    def sample(self) -> Tuple[torch.Tensor, torch.Tensor]:
-        ind = randint(a=0, b=self._received_words.shape[0] - 1)
+    def sample(self, i: int) -> Tuple[torch.Tensor, torch.Tensor]:
+        if conf.channel_type == ChannelModes.SISO.name:
+            ind = i % self._received_words.shape[0]
+        elif conf.channel_type == ChannelModes.MIMO.name:
+            ind = randint(a=0, b=self._received_words.shape[0] - 1)
+        else:
+            raise ValueError("No such channel type!!!")
         reshaped_tx = self._transmitted_words[ind].reshape(1, -1)
         if conf.modulation_type == ModulationType.QPSK.name:
             reshaped_rx = self._received_words[ind].reshape(1, -1, 2)

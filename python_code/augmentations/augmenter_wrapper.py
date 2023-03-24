@@ -10,11 +10,11 @@ from python_code.augmentations.translation_augmenter import TranslationAugmenter
 from python_code.channel.modulator import MODULATION_NUM_MAPPING
 from python_code.utils.config_singleton import Config
 from python_code.utils.constants import ChannelModes, ModulationType
-from python_code.utils.probs_utils import calculate_mimo_states
+from python_code.utils.probs_utils import calculate_mimo_states, calculate_siso_states
 
 conf = Config()
 
-MIN_CLUSTER_POINTS = 50
+MIN_CLUSTER_POINTS_DICT = {ChannelModes.SISO.name: 100, ChannelModes.MIMO.name: 50}
 
 
 def estimate_params(rx: torch.Tensor, tx: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor, int, int]:
@@ -24,7 +24,11 @@ def estimate_params(rx: torch.Tensor, tx: torch.Tensor) -> Tuple[torch.Tensor, t
     :param tx: transmitted pilots word
     :return: updated centers and stds values per class
     """
-    if conf.channel_type == ChannelModes.MIMO.name:
+    if conf.channel_type == ChannelModes.SISO.name:
+        gt_states = calculate_siso_states(conf.memory_length, tx)
+        n_states = MODULATION_NUM_MAPPING[conf.modulation_type] ** conf.memory_length
+        state_size = 1
+    elif conf.channel_type == ChannelModes.MIMO.name:
         gt_states = calculate_mimo_states(conf.n_user, tx)
         n_states = MODULATION_NUM_MAPPING[conf.modulation_type] ** conf.n_user
         state_size = conf.n_ant
@@ -36,7 +40,7 @@ def estimate_params(rx: torch.Tensor, tx: torch.Tensor) -> Tuple[torch.Tensor, t
 
     for state in range(n_states):
         state_ind = (gt_states == state)
-        if torch.count_nonzero(state_ind) > MIN_CLUSTER_POINTS:
+        if torch.count_nonzero(state_ind) > MIN_CLUSTER_POINTS_DICT[conf.channel_type]:
             state_received = rx[state_ind]
             stds[state] = torch.std(state_received, dim=0)
             centers[state] = torch.mean(state_received.real, dim=0)
@@ -104,17 +108,15 @@ class AugmenterWrapper:
     def n_states(self) -> int:
         return self._n_states
 
-    def augment_single(self) -> Tuple[torch.Tensor, torch.Tensor]:
+    def augment_single(self, i: int) -> Tuple[torch.Tensor, torch.Tensor]:
         """
         Augment the received word using one of the given augmentations methods.
         :param i: current repetition index
-        :param h: channel coefficients
-        :param snr: signal-to-noise ratio
         :return: the augmented received and transmitted pairs
         """
         aug_rxs, aug_txs = [], []
         # sample via the sampling method
-        rx, tx = self._sampler.sample()
+        rx, tx = self._sampler.sample(i)
         if len(self._augmentations) == 0:
             return rx, tx
 
@@ -153,10 +155,17 @@ class AugmenterWrapper:
                 i += 1
             # synthesize the rest of samples in Q*
             else:
-                cur_aug_rx, cur_aug_tx = self.augment_single()
-                aug_rx[i:i + self.active_augmentations_num] = cur_aug_rx
-                aug_tx[i:i + self.active_augmentations_num] = cur_aug_tx
-                i += self.active_augmentations_num
+                cur_aug_rx, cur_aug_tx = self.augment_single(i)
+                # if SISO, order of samples matters. so place only 1 sample out randomly of the active augmentations.
+                if conf.channel_type == ChannelModes.SISO.name:
+                    j = (i // tx.shape[0]) % self.active_augmentations_num
+                    aug_rx[i] = cur_aug_rx[j]
+                    aug_tx[i] = cur_aug_tx[j]
+                    i += 1
+                else:
+                    aug_rx[i:i + self.active_augmentations_num] = cur_aug_rx
+                    aug_tx[i:i + self.active_augmentations_num] = cur_aug_tx
+                    i += self.active_augmentations_num
 
         if conf.modulation_type == ModulationType.QPSK.name:
             aug_rx = torch.view_as_complex(aug_rx)
