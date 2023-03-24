@@ -2,9 +2,9 @@
 seed: 0 # run seed
 
 # channel
-channel_type: 'SISO' # Channel type values: ['SISO','MIMO'].
+channel_type: 'MIMO' # Channel type values: ['SISO','MIMO'].
 channel_model: 'Synthetic' # Physical channel models: ['Cost2100','Synthetic']
-detector_type: 'online_viterbinet'
+detector_type: 'joint_deepsic'
 # 'joint_black_box' or 'online_black_box' or 'joint_deepsic' or 'online_deepsic' or 'meta_deepsic'
 # 'joint_rnn' or 'online_rnn' or 'joint_viterbinet' or 'online_viterbinet' or 'meta_viterbinet'
 linear: True # channel linearity. Boolean value.
@@ -20,9 +20,9 @@ n_user: 4 # number of transmitting devices
 n_ant: 4 # number of received signals
 
 # validation phase protocol
-block_length: 10400 # coherence block time, total size of pilot + data. values: int.
-pilot_size: 400 # pilot bits
-blocks_num: 50 # number of validation frames. values: int.
+block_length: 50200 # coherence block time, total size of pilot + data. values: int.
+pilot_size: 200 # pilot bits
+blocks_num: 100 # number of validation frames. values: int.
 
 # training hyperparameters
 loss_type: 'CrossEntropy' # Loss type. values: 'BCE','CrossEntropy','MSE'.
