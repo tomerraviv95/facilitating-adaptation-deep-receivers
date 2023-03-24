@@ -4,7 +4,7 @@ seed: 0 # run seed
 # channel
 channel_type: 'MIMO' # Channel type values: ['MIMO'].
 channel_model: 'Cost2100' # Physical channel models: ['Cost2100','Synthetic']
-detector_type: 'deepsic'# 'deepsic' or 'black_box' or 'meta_deepsic'
+detector_type: 'joint_deepsic'# 'joint_black_box' or 'online_black_box' or 'joint_deepsic' or 'online_deepsic' or 'meta_deepsic'
 linear: True # channel linearity. Boolean value.
 fading_in_channel: True # If the channel is fading/non-fading. values: [True, False]
 snr: 10 # validation SNR value. values: float.
@@ -12,16 +12,21 @@ modulation_type: 'QPSK' # ['BPSK','QPSK']
 n_user: 4 # number of transmitting devices
 n_ant: 4 # number of received signals
 
-# protocol
-block_length: 50000 # coherence block time, total size of pilot + data. values: int.
+# validation phase protocol
+block_length: 50200 # coherence block time, total size of pilot + data. values: int.
 pilot_size: 200 # pilot bits
 blocks_num: 100 # number of validation frames. values: int.
 
-# online training hyperparameters
-is_online_training: True # Whether to run the online training (as in ViterbiNet). values: [True, False].
+# training hyperparameters
 loss_type: 'CrossEntropy' # Loss type. values: 'BCE','CrossEntropy','MSE'.
 optimizer_type: 'Adam' # Optimizer type. values: 'Adam','RMSprop','SGD'.
 
+# joint training hyperparameters
+joint_block_length: 5000
+joint_pilot_size: 5000
+joint_blocks_num: 1
+joint_snrs: [ 2,4,6,8,10,12,14,16 ]
+
 # augmentations
 aug_type: [ ] # ['geometric_augmenter','translation_augmenter','rotation_augmenter']
-online_repeats_n: 0 # number of desired augmented words out of online_total_words. values: 0<=online_repeats_n<=online_total_words
+online_repeats_n: 0  # number of desired augmented words out of online_total_words. values: 0<=online_repeats_n<=online_total_words

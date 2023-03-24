@@ -140,12 +140,13 @@ class Trainer(object):
         saved_detector = self.copy_model(self.detector)
         # if in joint training mode, train on the train dataset
         if self.is_joint_training:
-            # draw words for a given snr
-            joint_transmitted_words, joint_received_words, joint_hs = self.train_channel_dataset.__getitem__(
-                snr_list=[conf.joint_snr])
-            # get current word and channel
-            joint_tx, joint_h, joint_rx = joint_transmitted_words[0], joint_hs[0], joint_received_words[0]
-            self._online_training(joint_tx, joint_rx)
+            for joint_snr in conf.joint_snrs:
+                # draw words for a given snr
+                joint_transmitted_words, joint_received_words, joint_hs = self.train_channel_dataset.__getitem__(
+                    snr_list=[joint_snr])
+                # get current word and channel
+                joint_tx, joint_h, joint_rx = joint_transmitted_words[0], joint_hs[0], joint_received_words[0]
+                self._online_training(joint_tx, joint_rx)
         # draw words for a given snr
         transmitted_words, received_words, hs = self.test_channel_dataset.__getitem__(snr_list=[conf.snr])
         # buffer for words and their target

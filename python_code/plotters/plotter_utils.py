@@ -27,42 +27,33 @@ mpl.rcParams['font.family'] = 'STIXGeneral'
 
 
 def get_linestyle(method_name: str) -> str:
-    if 'Augmented' in method_name:
-        return 'solid'
-    elif 'Meta-' in method_name:
-        return 'dashed'
-    elif 'DeepSIC' in method_name:
-        return 'dotted'
-    elif 'DNN' in method_name:
-        return '-.'
-    else:
-        raise ValueError('No such detector!!!')
+    linestyles_dict = {'Augmented Online Meta-DeepSIC': 'solid',
+                       'Online Meta-DeepSIC': 'dashdot',
+                       'Online DeepSIC': 'dashed',
+                       'Joint DeepSIC': ':',
+                       'Online DNN Detector': 'dotted',
+                       'Joint DNN Detector': ':'}
+    return linestyles_dict[method_name]
 
 
 def get_marker(method_name: str) -> str:
-    if 'Augmented' in method_name:
-        return 'o'
-    elif 'Meta-' in method_name:
-        return 'X'
-    elif 'DeepSIC' in method_name:
-        return 's'
-    elif 'DNN' in method_name:
-        return 'p'
-    else:
-        raise ValueError('No such method!!!')
+    markers_dict = {'Augmented Online Meta-DeepSIC': 'o',
+                    'Online Meta-DeepSIC': 'X',
+                    'Online DeepSIC': 's',
+                    'Joint DeepSIC': 'p',
+                    'Online DNN Detector': '.',
+                    'Joint DNN Detector': '8'}
+    return markers_dict[method_name]
 
 
 def get_color(method_name: str) -> str:
-    if 'Augmented' in method_name:
-        return 'blue'
-    elif 'Meta-' in method_name:
-        return 'black'
-    elif 'DeepSIC' in method_name:
-        return 'red'
-    elif 'DNN' in method_name:
-        return 'green'
-    else:
-        raise ValueError('No such method!!!')
+    colors_dict = {'Augmented Online Meta-DeepSIC': 'black',
+                   'Online Meta-DeepSIC': 'blue',
+                   'Online DeepSIC': 'red',
+                   'Joint DeepSIC': 'green',
+                   'Online DNN Detector': 'cyan',
+                   'Joint DNN Detector': 'orange'}
+    return colors_dict[method_name]
 
 
 def get_all_plots(dec: Trainer, run_over: bool, method_name: str, trial=None):
@@ -76,14 +67,14 @@ def get_all_plots(dec: Trainer, run_over: bool, method_name: str, trial=None):
     plots_path = os.path.join(PLOTS_DIR, file_name)
     print(plots_path)
     # if plot already exists, and the run_over flag is false - load the saved plot
-    if os.path.isfile(plots_path + '_ber' + '.pkl') and not run_over:
+    if os.path.isfile(plots_path + '.pkl') and not run_over:
         print("Loading plots")
-        ber_total = load_pkl(plots_path, type='ber')
+        ber_total = load_pkl(plots_path)
     else:
         # otherwise - run again
         print("Calculating fresh")
         ber_total = dec.evaluate()
-        save_pkl(plots_path, ber_total, type='ber')
+        save_pkl(plots_path, ber_total)
     return ber_total
 
 
@@ -95,7 +86,7 @@ def plot_by_values(all_curves: List[Tuple[np.ndarray, np.ndarray, str]], values:
     if not os.path.isdir(os.path.join(FIGURES_DIR, folder_name)):
         os.makedirs(os.path.join(FIGURES_DIR, folder_name))
 
-    # extract names from simulated plots
+    # extract names from simulated plots - backup
     plt.figure()
     names = []
     for i in range(len(all_curves)):
@@ -107,7 +98,7 @@ def plot_by_values(all_curves: List[Tuple[np.ndarray, np.ndarray, str]], values:
     x_ticks = values
     x_labels = values
 
-    # plots all methods
+    # plots - backup all methods
     for method_name in names:
         print(method_name)
         plt.plot(values, sers_dict[method_name], label=method_name,

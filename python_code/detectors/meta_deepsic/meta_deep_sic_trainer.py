@@ -22,6 +22,7 @@ class MetaDeepSICTrainer(DeepSICTrainer):
 
     def __init__(self):
         super().__init__()
+        self.is_online_training = True
         self.is_online_meta = True
 
     def copy_model(self, model: List[nn.Module]) -> List[nn.Module]:

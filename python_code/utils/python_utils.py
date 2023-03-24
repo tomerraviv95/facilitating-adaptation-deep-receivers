@@ -8,14 +8,14 @@ from python_code import conf
 from python_code.channel.modulator import MODULATION_NUM_MAPPING
 
 
-def save_pkl(pkls_path: str, array: np.ndarray, type: str):
-    output = open(pkls_path + '_' + type + '.pkl', 'wb')
+def save_pkl(pkls_path: str, array: np.ndarray):
+    output = open(pkls_path + '.pkl', 'wb')
     pkl.dump(array, output)
     output.close()
 
 
-def load_pkl(pkls_path: str, type: str) -> Dict[Any, Any]:
-    output = open(pkls_path + '_' + type + '.pkl', 'rb')
+def load_pkl(pkls_path: str) -> Dict[Any, Any]:
+    output = open(pkls_path + '.pkl', 'rb')
     return pkl.load(output)
 
 
