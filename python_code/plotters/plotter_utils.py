@@ -27,32 +27,56 @@ mpl.rcParams['font.family'] = 'STIXGeneral'
 
 
 def get_linestyle(method_name: str) -> str:
-    linestyles_dict = {'Augmented Online Meta-DeepSIC': 'solid',
-                       'Online Meta-DeepSIC': 'dashdot',
-                       'Online DeepSIC': 'dashed',
-                       'Joint DeepSIC': ':',
-                       'Online DNN Detector': 'dotted',
-                       'Joint DNN Detector': ':'}
+    linestyles_dict = {
+        'Augmented Online Meta-DeepSIC': 'solid',
+        'Augmented Online Meta-ViterbiNet': 'solid',
+        'Online Meta-DeepSIC': 'dashdot',
+        'Online Meta-ViterbiNet': 'dashdot',
+        'Online DeepSIC': 'dashed',
+        'Online ViterbiNet': 'dashed',
+        'Joint DeepSIC': 'dashed',
+        'Joint ViterbiNet': 'dashed',
+        'Online RNN Detector': 'dotted',
+        'Online DNN Detector': 'dotted',
+        'Joint RNN Detector': ':',
+        'Joint DNN Detector': ':'
+    }
     return linestyles_dict[method_name]
 
 
 def get_marker(method_name: str) -> str:
-    markers_dict = {'Augmented Online Meta-DeepSIC': 'o',
-                    'Online Meta-DeepSIC': 'X',
-                    'Online DeepSIC': 's',
-                    'Joint DeepSIC': 'p',
-                    'Online DNN Detector': '.',
-                    'Joint DNN Detector': '8'}
+    markers_dict = {
+        'Augmented Online Meta-DeepSIC': 'o',
+        'Augmented Online Meta-ViterbiNet': 'o',
+        'Online Meta-DeepSIC': 'X',
+        'Online Meta-ViterbiNet': 'X',
+        'Online DeepSIC': 's',
+        'Online ViterbiNet': 's',
+        'Joint DeepSIC': 'p',
+        'Joint ViterbiNet': 'p',
+        'Online DNN Detector': '.',
+        'Online RNN Detector': '.',
+        'Joint DNN Detector': '8',
+        'Joint RNN Detector': '8'
+    }
     return markers_dict[method_name]
 
 
 def get_color(method_name: str) -> str:
-    colors_dict = {'Augmented Online Meta-DeepSIC': 'black',
-                   'Online Meta-DeepSIC': 'blue',
-                   'Online DeepSIC': 'red',
-                   'Joint DeepSIC': 'green',
-                   'Online DNN Detector': 'cyan',
-                   'Joint DNN Detector': 'orange'}
+    colors_dict = {
+        'Augmented Online Meta-DeepSIC': 'black',
+        'Augmented Online Meta-ViterbiNet': 'black',
+        'Online Meta-DeepSIC': 'blue',
+        'Online Meta-ViterbiNet': 'blue',
+        'Online DeepSIC': 'red',
+        'Online ViterbiNet': 'red',
+        'Joint DeepSIC': 'green',
+        'Joint ViterbiNet': 'green',
+        'Online DNN Detector': 'cyan',
+        'Online RNN Detector': 'cyan',
+        'Joint DNN Detector': 'orange',
+        'Joint RNN Detector': 'orange'
+    }
     return colors_dict[method_name]
 
 

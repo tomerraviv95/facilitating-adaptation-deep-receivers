@@ -6,7 +6,7 @@ from python_code.utils.constants import DetectorType
 
 class PlotType(Enum):
     LINEAR_SYNTH_QPSK = 'LINEAR_SYNTH_QPSK'
-    LINEAR_SYNTH_QPSK_SISO = 'LINEAR_SYNTH_QPSK_SISO'
+    SISO = 'SISO'
 
 
 def get_config(plot_type: PlotType) -> Tuple[List[Dict], list, str, str]:
@@ -64,7 +64,7 @@ def get_config(plot_type: PlotType) -> Tuple[List[Dict], list, str, str]:
         ]
         values = list(range(10, 17, 1))
         xlabel, ylabel = 'SNR [dB]', 'BER'
-    elif plot_type == PlotType.LINEAR_SYNTH_QPSK_SISO:
+    elif plot_type == PlotType.SISO:
         params_dicts = [
             {'snr': 10, 'detector_type': DetectorType.joint_rnn.name},
             {'snr': 11, 'detector_type': DetectorType.joint_rnn.name},
