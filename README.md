@@ -75,29 +75,72 @@ The config works by the [singleton design pattern](https://en.wikipedia.org/wiki
 The config is accessible from every module in the package, featuring the next parameters:
 1. seed - random number generator seed. Integer.
 2. channel_type - run either siso or mimo setup. Values in the set of ['SISO','MIMO']. String.
-3. channel_model - chooses the channel taps values, either synthetic or based on COST2100. String in the set ('Cost2100','Synthetic').
-
-
-4. iterations - number of iterations in the unfolded DeepSIC architecture. Integer.
-5. info_size - number of information bits in each training pilot block and test data block. Integer.
-6. train_frame_num - number of blocks used for training. Integer.
-7. test_frame_num - number of blocks used for test. Integer.
-8. test_pilot_size - number of bits in each test pilot block. Integer.
-9. fading - whether to use fading. Relevant only to the SED channel. Boolean flag.
-10. channel_mode - choose the Spatial Exponential Decay Channel Model, i.e. exp(-|i-j|), or the beamformed COST channel. String value: 'SED' or 'COST'. COST works with 8x8 n_user and n_ant only.
-11. lr - learning rate for training. Float.
-12. max_epochs - number of offline training epochs. Integer.
-13. self_supervised_epochs - number of online training epochs. Integer.
-14. use_ecc - whether to use Error Correction Codes (ECC) or not. If not - automatically will run in evaluations the online pilots-blocks scenario (as in pilots efficiency part). Boolean flag.
-15. n_ecc_symbols - number of symbols in ecc. Number of additional transmitted bits is 8 times this value, due to the specific Reed-Solomon we employ. [Read more here](https://en.wikiversity.org/wiki/Reed%E2%80%93Solomon_codes_for_coders). Integer.
-16. ber_thresh - threshold for self-supervised training, as in the [ViterbiNet](https://arxiv.org/abs/1905.10750) or [DeepSIC](https://arxiv.org/abs/2002.03214) papers.
-17. change_user_only - allows change of channel for a single user. Integer value (the index of the desired user: {0,..,n_user}).
-18. retrain_user - only in the DeepSIC architecture, allow for training the specific user networks only. Integer value (the index of the desired user: {0,..,n_user}).
+3. channel_model - chooses the channel taps values, either synthetic or based on COST2100. String in the set ['Cost2100','Synthetic'].
+4. detector_type - selects the training + architecture to run. String in the set ['joint_black_box','online_black_box','joint_deepsic','online_deepsic','meta_deepsic',
+'joint_rnn','online_rnn','joint_viterbinet','online_viterbinet','meta_viterbinet'].
+5. linear - whether to apply non-linear tanh at the channel output, not used in the paper but still may be applied. Bool.
+6.fading_in_channel - whether to use fading. Relevant only to the synthetic channel. Boolean flag.
+7. snr - signal-to-noise ratio, determines the variance properties of the noise, in dB. Float.
+8. modulation_type - either 'BPSK' or 'QPSK', string.
+9. memory_length - siso channel hyperparameter, integer.
+10. n_user - mimo channel hyperparameter, number of transmitting devices. Integer.
+11. n_ant - mimo channel hyperparameter, number of receiving devices. Integer.
+12. block_length - number of coherence block bits, total size of pilot + data. Integer.
+13. pilot_size - number of pilot bits. Integer.
+14. blocks_num - number of blocks in the tranmission. Integer.
+15. loss_type - 'CrossEntropy', could be altered to other types 'BCE' or 'MSE'.
+16. optimizer_type - 'Adam', could be altered to other types 'RMSprop' or 'SGD'.
+17. joint_block_length - joint training hyperparameter. Offline training block length. Integer.
+18. joint_pilot_size - joint training hyperparameter. Offline training pilots block length. Integer.
+19. joint_blocks_num - joint training hyperparameter. Number of blocks to train on offline. Integer.
+20. joint_snrs - joint training hyperparameter. Number of SNRs to traing from offline. List of float values.
+21. aug_type - what augmentations to use. leave empty list for no augmentations, or add whichever of the following you like: ['geometric_augmenter','translation_augmenter','rotation_augmenter']
+22. online_repeats_n - if using augmentations, adds this factor times the number of pilots to the training batch. Leave at 0 if not using augmentations, if using augmentations try integer values in 2-5.
 
 ## resources
 
-Keeps the COST channel coefficients vectors in 4 test folders. Also holds config runs for the paper.
+Keeps the COST channel coefficients vectors. Also holds config runs for the paper's numerical comparisons figures.
 
 ## dir_definitions 
 
 Definitions of relative directories.
+
+# Execution
+
+To execute the code, first download and install Git, Anaconda and PyCharm.
+
+Then install the environment, follow the installation setup below. 
+
+At last, open PyCharm in the root directory. You may run either the trainers or one of the plotters.
+
+This code was simulated with GeForce RTX 3060 with CUDA 12. 
+
+## Environment Installation
+
+1. Open git bash and cd to a working directory of you choice.
+
+2. Clone this repository to your local machine.
+
+3. Open Anaconda prompt and navigate to the cloned repository.
+
+4. Run the command "conda env create -f environment.yml". This should install the required python environment.
+
+5. Open the cloned directory using PyCharm.
+
+6. After the project has been opened in PyCharm, go to settings, File -> Settings... (or CTRL ALT S)
+
+7. In the opened window open the tab Project -> Project Interpreter
+
+8. In the new window, click on the cog icon and then on Add...
+
+9. In the add python interpreter window, click on the Conda Environment tab
+
+10. Select Existing environment and navigate to where the python.exe executable of the deep_ensemble environment is installed under the interpreter setting
+
+  - For windows its usually found at C:\users\<username>\anaconda3\envs\environment\python.exe)
+
+  - For linux its usually found at /home/<username>/anaconda3
+  
+11. Click OK
+
+12. Done!
