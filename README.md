@@ -6,7 +6,7 @@
 
 Python repository for the magazine paper "Adaptive and Flexible Model-Based AI for Deep Receivers in Dynamic Channels".
 
-Please cite our [paper](https://arxiv.org/abs/2203.14359), if the code is used for publishing research.
+Please cite our [paper (coming soon)](https://arxiv.org/), if the code is used for publishing research.
 
 # Table of Contents
 
