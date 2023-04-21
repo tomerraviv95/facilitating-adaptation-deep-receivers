@@ -76,8 +76,17 @@ The config is accessible from every module in the package, featuring the next pa
 1. seed - random number generator seed. Integer.
 2. channel_type - run either siso or mimo setup. Values in the set of ['SISO','MIMO']. String.
 3. channel_model - chooses the channel taps values, either synthetic or based on COST2100. String in the set ['Cost2100','Synthetic'].
-4. detector_type - selects the training + architecture to run. String in the set ['joint_black_box','online_black_box','joint_deepsic','online_deepsic','meta_deepsic',
-'joint_rnn','online_rnn','joint_viterbinet','online_viterbinet','meta_viterbinet'].
+4. detector_type - selects the training + architecture to run. Short description of each option: 
+* 'joint_black_box - Joint training of the black-box fully connected in the MIMO case.
+* 'online_black_box' - Joint training of the black-box fully connected in the MIMO case.
+* 'joint_deepsic' - Joint training of the black-box fully connected in the MIMO case.
+* 'online_deepsic' - Joint training of the black-box fully connected in the MIMO case.
+* 'meta_deepsic' - Joint training of the black-box fully connected in the MIMO case.
+* 'joint_rnn' - Joint training of the black-box fully connected in the MIMO case.
+* 'online_rnn' - Joint training of the black-box fully connected in the MIMO case.
+* 'joint_viterbinet' - Joint training of the black-box fully connected in the MIMO case.
+* online_viterbinet' - Joint training of the black-box fully connected in the MIMO case.
+* 'meta_viterbinet' - Joint training of the black-box fully connected in the MIMO case.
 5. linear - whether to apply non-linear tanh at the channel output, not used in the paper but still may be applied. Bool.
 6.fading_in_channel - whether to use fading. Relevant only to the synthetic channel. Boolean flag.
 7. snr - signal-to-noise ratio, determines the variance properties of the noise, in dB. Float.
