@@ -6,7 +6,7 @@
 
 Python repository for the magazine paper "Adaptive and Flexible Model-Based AI for Deep Receivers in Dynamic Channels".
 
-Please cite our [paper (coming soon)](https://arxiv.org/), if the code is used for publishing research.
+Please cite our [paper (coming soon)](https://arxiv.org/), if the code is used for publishing research. 
 
 # Table of Contents
 
@@ -35,10 +35,11 @@ It includes the possibility of adding the communication drive augmentations of [
 see [this github repo](https://github.com/tomerraviv95/data-augmentations-for-receivers) for the code implementation.
 From the training prespective, you can choose between joint training (the receiver is trained offline in a pre-test phase, using data simulated from multitude of channel realizations. 
 No additional training is done online in the test phase), online training (the receiver is trained online using the pilots batch at each time step) and meta-learning training taken
-from [my previous meta-learning paper](https://arxiv.org/pdf/2203.14359.pdf), code implementation for [siso](https://github.com/tomerraviv95/meta-viterbinet) and [mimo](https://github.com/tomerraviv95/meta-deepsic). In the paper we show that the gains from the different approaches add up individually over the two scenarios and a range of SNRs.
-  
+from [my previous meta-learning paper](https://arxiv.org/pdf/2203.14359.pdf), code implementation for [siso](https://github.com/tomerraviv95/meta-viterbinet) and [mimo](https://github.com/tomerraviv95/meta-deepsic). In the paper we show that the gains from the different approaches add up individually over the two scenarios and a range of SNRs. 
 
 # Folders Structure
+
+* *Main Run* - Run the evaluate.py script  after choosing approriate hyperparameters and setup in the config.yaml to run the eval.
 
 ## python_code 
 
