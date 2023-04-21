@@ -39,7 +39,7 @@ from [my previous meta-learning paper](https://arxiv.org/pdf/2203.14359.pdf), co
 
 # Folders Structure
 
-* *Main Run* - Run the evaluate.py script  after choosing approriate hyperparameters and setup in the config.yaml to run the eval.
+*Main Run* - Run the evaluate.py script  after choosing approriate hyperparameters and setup in the config.yaml to run the eval.
 
 ## python_code 
 
