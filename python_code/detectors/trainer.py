@@ -12,7 +12,7 @@ from python_code.augmentations.augmenter_wrapper import AugmenterWrapper
 from python_code.channel.channel_dataset import ChannelModelDataset
 from python_code.channel.modulator import MODULATION_NUM_MAPPING
 from python_code.utils.constants import ModulationType
-from python_code.utils.metrics import calculate_ber
+from python_code.utils.metrics import calculate_ser
 from python_code.utils.probs_utils import get_bits_from_qpsk_symbols
 
 random.seed(conf.seed)
@@ -188,7 +188,7 @@ class Trainer(object):
             target = tx_data[:, :rx.shape[1]]
             if conf.modulation_type == ModulationType.QPSK.name:
                 target = get_bits_from_qpsk_symbols(target)
-            ber = calculate_ber(detected_word, target)
+            ber = calculate_ser(detected_word, target)
             total_ber.append(ber)
             print(f'current: {block_ind, ber}')
         print(f'Final ser: {sum(total_ber) / len(total_ber)}')
