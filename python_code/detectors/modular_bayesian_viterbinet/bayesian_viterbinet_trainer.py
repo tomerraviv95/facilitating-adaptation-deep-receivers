@@ -8,7 +8,7 @@ from python_code.utils.constants import Phase, HALF
 from python_code.utils.probs_utils import calculate_siso_states
 
 conf = Config()
-EPOCHS = 500
+EPOCHS = 300
 
 
 class BayesianVNETTrainer(ViterbiNetTrainer):
@@ -17,17 +17,13 @@ class BayesianVNETTrainer(ViterbiNetTrainer):
     """
 
     def __init__(self):
-        self.probs_vec = None
         self.ensemble_num = 5
-        self.kl_scale = 5
-        self.kl_beta = 1e-3
+        self.kl_scale = 0.5
+        self.kl_beta = 1e-2
         self.arm_beta = 2
         super().__init__()
         self.is_bayesian = True
-        self.is_joint_training = True
-
-    def __str__(self):
-        return 'Bayesian ViterbiNet'
+        self.is_online_training = True
 
     def _initialize_detector(self):
         """
@@ -49,8 +45,7 @@ class BayesianVNETTrainer(ViterbiNetTrainer):
         :return: loss value
         """
         gt_states = calculate_siso_states(self.memory_length, tx)
-        data_fitting_loss_term = self.criterion(input=est.priors, target=gt_states)
-        loss = data_fitting_loss_term
+        loss = self.criterion(input=est.priors, target=gt_states)
         # ARM Loss
         arm_loss = 0
         for i in range(self.ensemble_num):
@@ -58,7 +53,7 @@ class BayesianVNETTrainer(ViterbiNetTrainer):
             loss_term_arm_tilde = self.criterion(input=est.arm_tilde[i], target=gt_states)
             arm_delta = (loss_term_arm_tilde - loss_term_arm_original)
             grad_logit = arm_delta * (est.u_list[i] - HALF)
-            arm_loss += torch.matmul(grad_logit, self.detector.net.dropout_logit.T)
+            arm_loss += torch.matmul(grad_logit, est.dropout_logit.T)
         arm_loss = torch.mean(arm_loss)
         # KL Loss
         kl_term = self.kl_beta * est.kl_term

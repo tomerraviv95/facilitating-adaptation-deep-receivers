@@ -1,4 +1,3 @@
-import collections
 from typing import Tuple
 
 import torch
@@ -6,9 +5,8 @@ import torch.nn as nn
 
 from python_code import DEVICE
 from python_code.detectors.viterbinet.viterbinet_detector import create_transition_table, acs_block
-from python_code.utils.constants import Phase, HALF
-
-LossVariable = collections.namedtuple('LossVariable', 'priors arm_original arm_tilde u_list kl_term')
+from python_code.utils.bayesian_utils import LossVariable
+from python_code.utils.constants import Phase
 
 HIDDEN_SIZE = 75
 
@@ -39,27 +37,22 @@ class BayesianDNN(nn.Module):
     which will be used in the computed loss
     """
 
-    def __init__(self, n_states: int, kl_scale: float):
+    def __init__(self, n_states: int, kl_scale: float, ensemble_num: int):
         super(BayesianDNN, self).__init__()
         self.fc1 = nn.Linear(1, HIDDEN_SIZE).to(DEVICE)
+        self.activation = nn.ReLU().to(DEVICE)
         self.fc2 = nn.Linear(HIDDEN_SIZE, n_states).to(DEVICE)
         self.dropout_logit = nn.Parameter(torch.rand(HIDDEN_SIZE).reshape(1, -1))
-        self.T = HALF
-        self.activation = nn.ReLU().to(DEVICE)
         self.sigmoid = nn.Sigmoid()
-        self.softmax = nn.Softmax(dim=1)
         self.log_softmax = nn.LogSoftmax(dim=1)
         self.kl_scale = kl_scale
+        self.ensemble_num = ensemble_num
 
-    def forward(self, raw_input: torch.Tensor, num_ensemble: int, phase: Phase):
-        if phase == Phase.TRAIN:
-            log_probs = 0
-        else:
-            log_probs = 0
-            probs = 0
+    def forward(self, raw_input: torch.Tensor, phase: Phase):
+        log_probs = 0
         arm_original, arm_tilde, u_list, kl_term = [], [], [], 0
 
-        for ind_ensemble in range(num_ensemble):
+        for ind_ensemble in range(self.ensemble_num):
             # first layer
             x = self.activation(self.fc1(raw_input))
             u = torch.rand(x.shape).to(DEVICE)
@@ -77,12 +70,10 @@ class BayesianDNN(nn.Module):
                 out_tilde = self.fc2(x_tilde)
                 arm_tilde.append(self.log_softmax(out_tilde))
             else:
-                probs += self.softmax(out.clone().detach() / self.T)  # /self.T
+                log_probs += self.log_softmax(out)
 
-        if phase == Phase.TRAIN:
-            log_probs /= num_ensemble
-        else:
-            log_probs = torch.log(probs / num_ensemble)
+        log_probs /= self.ensemble_num
+
         # add KL term if training
         if phase == Phase.TRAIN:
             # KL term
@@ -90,9 +81,9 @@ class BayesianDNN(nn.Module):
             first_layer_kl = scaling1 * torch.norm(self.fc1.weight, dim=1) ** 2
             H1 = entropy(torch.sigmoid(self.dropout_logit).reshape(-1))
             kl_term = torch.mean(first_layer_kl - H1)
-
-        return LossVariable(priors=log_probs, arm_original=arm_original, arm_tilde=arm_tilde,
-                            u_list=u_list, kl_term=kl_term)
+            return LossVariable(priors=log_probs, arm_original=arm_original, arm_tilde=arm_tilde,
+                                u_list=u_list, kl_term=kl_term, dropout_logit=self.dropout_logit)
+        return log_probs
 
 
 class BayesianVNETDetector(nn.Module):
@@ -105,8 +96,7 @@ class BayesianVNETDetector(nn.Module):
         self.n_states = n_states
         self.transition_table_array = create_transition_table(n_states)
         self.transition_table = torch.Tensor(self.transition_table_array).to(DEVICE)
-        self.net = BayesianDNN(self.n_states, kl_scale).to(DEVICE)
-        self.ensemble_num = ensemble_num
+        self.net = BayesianDNN(self.n_states, kl_scale, ensemble_num).to(DEVICE)
 
     def forward(self, rx: torch.Tensor, phase: Phase) -> Tuple[torch.Tensor, Tuple[torch.Tensor, torch.Tensor]]:
 
@@ -114,9 +104,7 @@ class BayesianVNETDetector(nn.Module):
         in_prob = torch.zeros([1, self.n_states]).to(DEVICE)
 
         if phase == Phase.TEST:
-            priors = self.net(rx, self.ensemble_num, phase).priors
-            confident_bits = (torch.argmax(torch.exp(priors), dim=1) % 2).reshape(-1, 1)
-            confidence_word = torch.amax(torch.exp(priors), dim=1).reshape(-1, 1)
+            priors = self.net(rx, phase)
             detected_word = torch.zeros(rx.shape).to(DEVICE)
             for i in range(rx.shape[0]):
                 # get the lsb of the state
@@ -128,4 +116,4 @@ class BayesianVNETDetector(nn.Module):
 
             return detected_word
         else:
-            return self.net(rx, self.ensemble_num, phase)
+            return self.net(rx, phase)
