@@ -33,6 +33,8 @@ class DeepSICTrainer(Trainer):
             name = 'Online ' + name
         if len(conf.aug_type) > 0:
             name = 'Augmented ' + name
+        if self.is_bayesian:
+            name = 'Bayesian ' + name
         return name
 
     def _initialize_detector(self):

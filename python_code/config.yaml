@@ -2,15 +2,15 @@
 seed: 0 # run seed
 
 # channel
-channel_type: 'MIMO' # Channel type values: ['SISO','MIMO'].
+channel_type: 'SISO' # Channel type values: ['SISO','MIMO'].
 channel_model: 'Synthetic' # Physical channel models: ['Cost2100','Synthetic']
-detector_type: 'online_deepsic'
-# 'joint_black_box' or 'online_black_box' or 'joint_deepsic' or 'online_deepsic' or 'meta_deepsic'
-# 'joint_rnn' or 'online_rnn' or 'joint_viterbinet' or 'online_viterbinet' or 'meta_viterbinet'
+detector_type: 'online_viterbinet'
+# 'joint_black_box' or 'online_black_box' or 'joint_deepsic' or 'online_deepsic' or 'meta_deepsic' or 'bayesian_deepsic'
+# 'joint_rnn' or 'online_rnn' or 'joint_viterbinet' or 'online_viterbinet' or 'meta_viterbinet' or 'bayesian_viterbinet'
 linear: True # channel linearity. Boolean value.
 fading_in_channel: True # If the channel is fading/non-fading. values: [True, False]
 snr: 10 # validation SNR value. values: float.
-modulation_type: 'QPSK' # ['BPSK','QPSK']
+modulation_type: 'BPSK' # ['BPSK','QPSK']
 
 # SISO hyperparams
 memory_length: 4
@@ -20,7 +20,7 @@ n_user: 4 # number of transmitting devices
 n_ant: 4 # number of received signals
 
 # validation phase protocol
-block_length: 30200 # coherence block time, total size of pilot + data. values: int.
+block_length: 20200 # coherence block time, total size of pilot + data. values: int.
 pilot_size: 200 # pilot bits
 blocks_num: 100 # number of validation frames. values: int.
 
@@ -29,10 +29,10 @@ loss_type: 'CrossEntropy' # Loss type. values: 'BCE','CrossEntropy','MSE'.
 optimizer_type: 'Adam' # Optimizer type. values: 'Adam','RMSprop','SGD'.
 
 # joint training hyperparameters
-joint_block_length: 5000
-joint_pilot_size: 5000
+joint_block_length: 500
+joint_pilot_size: 500
 joint_blocks_num: 1
-joint_snrs: [ 2,4,6,8,10,12,14,16 ]
+joint_snrs: [ 10 ]
 
 # augmentations
 aug_type: [  ] # ['geometric_augmenter','translation_augmenter','rotation_augmenter']

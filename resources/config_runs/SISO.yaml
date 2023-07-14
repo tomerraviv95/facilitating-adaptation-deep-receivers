@@ -5,8 +5,8 @@ seed: 0 # run seed
 channel_type: 'SISO' # Channel type values: ['SISO','MIMO'].
 channel_model: 'Synthetic' # Physical channel models: ['Cost2100','Synthetic']
 detector_type: 'joint_viterbinet'
-# 'joint_black_box' or 'online_black_box' or 'joint_deepsic' or 'online_deepsic' or 'meta_deepsic'
-# 'joint_rnn' or 'online_rnn' or 'joint_viterbinet' or 'online_viterbinet' or 'meta_viterbinet'
+# 'joint_black_box' or 'online_black_box' or 'joint_deepsic' or 'online_deepsic' or 'meta_deepsic' or 'bayesian_deepsic'
+# 'joint_rnn' or 'online_rnn' or 'joint_viterbinet' or 'online_viterbinet' or 'meta_viterbinet' or 'bayesian_viterbinet'
 linear: True # channel linearity. Boolean value.
 fading_in_channel: True # If the channel is fading/non-fading. values: [True, False]
 snr: 10 # validation SNR value. values: float.

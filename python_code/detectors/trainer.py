@@ -36,6 +36,7 @@ class Trainer(object):
         self.is_online_meta = False
         self.is_online_training = False
         self.is_joint_training = False
+        self.is_bayesian = False
         self._initialize_dataloader()
         self._initialize_detector()
         self.softmax = torch.nn.Softmax(dim=1)  # Single symbol probability inference

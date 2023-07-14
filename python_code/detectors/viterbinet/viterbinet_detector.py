@@ -4,8 +4,7 @@ import torch.nn as nn
 
 from python_code import DEVICE
 
-HIDDEN1_SIZE = 75
-HIDDEN2_SIZE = 16
+HIDDEN_SIZE = 75
 
 
 def create_transition_table(n_states: int) -> np.ndarray:
@@ -48,9 +47,9 @@ class ViterbiNetDetector(nn.Module):
         self._initialize_dnn()
 
     def _initialize_dnn(self):
-        layers = [nn.Linear(1, HIDDEN1_SIZE),
+        layers = [nn.Linear(1, HIDDEN_SIZE),
                   nn.ReLU(),
-                  nn.Linear(HIDDEN1_SIZE, self.n_states)]
+                  nn.Linear(HIDDEN_SIZE, self.n_states)]
         self.net = nn.Sequential(*layers).to(DEVICE)
 
     def forward(self, rx: torch.Tensor, phase: str) -> torch.Tensor:
