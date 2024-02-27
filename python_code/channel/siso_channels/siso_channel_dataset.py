@@ -31,6 +31,7 @@ class SISOChannel:
         padded_tx = np.concatenate(
             [np.zeros([tx.shape[0], conf.memory_length - 1]), tx, np.zeros([tx.shape[0], conf.memory_length])], axis=1)
         if conf.modulation_type == ModulationType.QPSK.name:
+            print("Did not implement the QPSK constellation for the SISO case, switch to BPSK or MIMO!")
             raise ValueError("Did not implement the QPSK constellation for the SISO case, switch to BPSK or MIMO!")
         # modulation
         s = MODULATION_DICT[conf.modulation_type].modulate(padded_tx)

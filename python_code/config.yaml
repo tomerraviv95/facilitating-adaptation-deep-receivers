@@ -4,13 +4,13 @@ seed: 0 # run seed
 # channel
 channel_type: 'SISO' # Channel type values: ['SISO','MIMO'].
 channel_model: 'Synthetic' # Physical channel models: ['Cost2100','Synthetic']
-detector_type: 'bayesian_viterbinet'
+detector_type: 'online_viterbinet'
 # 'joint_black_box' or 'online_black_box' or 'joint_deepsic' or 'online_deepsic' or 'meta_deepsic' or 'bayesian_deepsic'
 # 'joint_rnn' or 'online_rnn' or 'joint_viterbinet' or 'online_viterbinet' or 'meta_viterbinet' or 'bayesian_viterbinet'
 linear: True # channel linearity. Boolean value.
 fading_in_channel: True # If the channel is fading/non-fading. values: [True, False]
 snr: 8 # validation SNR value. values: float.
-modulation_type: 'BPSK' # ['BPSK','QPSK']
+modulation_type: 'QPSK' # ['BPSK','QPSK']
 
 # SISO hyperparams
 memory_length: 4
@@ -20,8 +20,8 @@ n_user: 4 # number of transmitting devices
 n_ant: 4 # number of received signals
 
 # validation phase protocol
-block_length: 20200 # coherence block time, total size of pilot + data. values: int.
-pilot_size: 200 # pilot bits
+block_length: 20400 # coherence block time, total size of pilot + data. values: int.
+pilot_size: 400 # pilot bits
 blocks_num: 10 # number of validation frames. values: int.
 
 # training hyperparameters
